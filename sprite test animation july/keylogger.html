@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href=".css">
+    <title>Keylogger script</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <script>
+        var exit = true;
+        var key;  
+        
+
+
+        //while (exit){
+            window.addEventListener('keypress', function (e) {alert(doWhichKey(e));},false)
+
+
+        //}
+        function doWhichKey (e) {
+            e = e || window.event;
+            let charCode = e.keyCode || e.which;
+            key = String.fromCharCode(charCode);
+
+            if (key == "a"){
+                alert ("hello");
+            } else if (key == "s") {
+
+            } else if (key == "d") {
+                
+            } else if (key == "w") {
+                
+            } else if (key == "q") {
+                
+            } else if (key == "e") {
+                
+            } else {
+                alert(key);
+            }
+
+            return String.fromCharCode(charCode);
+        }
+    </script>
+</body>

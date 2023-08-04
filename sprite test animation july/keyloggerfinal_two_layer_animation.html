@@ -5,14 +5,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="stylesheet_two_layer_aanimation.css">
+    <link rel="stylesheet" href="stylesheet_two_layer_animation.css">
     <title>Keylogger script</title>
     <style>
     </style>
 </head>
 
 <!-- 
-    - find how to move exact position of keyframes animation across screen with js - working on it first
+    - find how to move exact position of keyframes animation across screen with js - done
     - combine running animation into one animation using two keyframes - tbd
     - collision control -tbd
         - borders
@@ -23,21 +23,20 @@
         - find a good background spritesheet that is wider than 925px (at least 1800px for parallax scroll)
     - write a function that changes the z-index of all the spritesheets - done
     
-    - cannot move keyframes with position or any matter -immediate problem
-        - have removed overflow hidden property from the css file for the character class to highlight the current issue
-        - need to either create a function for the movement of the image based on which frame the image is on
-        - or just move straight to js animations
-
-        - solution (3)
-            - introduce spacebar key for jumping.
-            - when moving up and down display = block for one key press. for a max height (based on blocks available)
-                - eg only able to move a total of five blocks from bottom of screen to top
-                - based on the height of the spritesheet and how much it was scaled
+    - cannot move keyframes with position or any matter - solved
     
     - immediate
-        - move all current inline css to a seperate css file (1)
+        - rotate through jump, attack and run animation (1)
+            - add in defend` animation for e key
+                - new spritesheet
+                - new code
+            - change up and down position for each animation
+            - switch if else to case statement
+                - preffered over if else 
+
         - add space bar to pressed keys (2)
-        - animating text (4)
+
+        - animating text (3)
             - save phrase as a var in js
             - run through each char in a loop (for)
             - intro text
@@ -84,12 +83,12 @@
                     <img id="Character_megaman_jumping" class="Character_jumping_spritesheet pixelart"
                         src="ss_megaman_jump.png" alt="Character Jumping" />
                 </div>
-                <div class="">
-                    <div class="Character_chargeShot">
+                <div id="Attack_animation" class="Attack_animation" >
+                    <div id="Character_chargeshot" class="Character_chargeShot">
                         <img id="Character_megaman_chargeshot" class="Character_chargeShot_spritesheet pixelart"
                             src="ss_megaman_attack.png" alt="Character Attacking" />
                     </div>
-                    <div class="Character_chargeBeam">
+                    <div id="Character_chargeBeam" class="Character_chargeBeam">
                         <img id="Character_megaman_chargeBeam" class="Character_chargeBeam_spritesheet pixelart"
                             src="ss_megaman_blast.png" alt="Blast Animation" />
                     </div>
@@ -103,13 +102,20 @@
 
     <script>
         var exit = true;
+
         var key;
-        var state = "no";
         var img;
         var canvas1, canvas2, canvas3;
 
-        var x = "10px";
-        var y = "100px";
+        var state = "no";
+        var current_animation = "Attack_animation";
+        var previous_animation ="";
+
+        let xPos = 0;
+        let yPos = 0;
+
+        var vx = 10;
+        var vy = 10;
 
         var canvas1DOM = document.getElementById("canvas1")
         var canvas2DOM = document.getElementById("canvas2")
@@ -158,12 +164,17 @@
 
             if (key == "a" || key == "A") {
                 state = "A";
+
             } else if (key == "s" || key == "S") {
                 state = "S";
+                xPos += vx;
             } else if (key == "d" || key == "D") {
                 state = "D";
             } else if (key == "w" || key == "W") {
                 state = "W";
+                //document.getElementById("Character_chargeBeam").style.top =-x;
+                //this changes the current top position to -10
+                xPos -= vx;
             } else if (key == "q" || key == "Q") {
                 state = "Q";
             } else if (key == "e" || key == "E") {
@@ -171,15 +182,16 @@
             } else {
                 state = "no";
             }
-
+            document.getElementById(current_animation).style.top = xPos +"px";
             canvas = canvas1DOM.getContext("2d");
             img = document.getElementById(state + "_key");
             canvas.drawImage(img, 0, 0);
 
             console.log(state);
             console.log(key);
-            console.log(x);
-            console.log(y);
+            console.log(vx);
+            console.log(vy);
+            console.log(xPos);
             return String.fromCharCode(charCode);
         }
     </script>

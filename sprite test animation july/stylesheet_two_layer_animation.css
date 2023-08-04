@@ -97,6 +97,7 @@ body
     animation: moveSpritesheet1 1s steps(5) infinite;
     width: calc(860px * var(--pixel-size)) ;
     position: absolute;
+    display:none;
 }
 
 .pixelart{
@@ -108,11 +109,16 @@ body
     display:none;
 }
 
+.Attack_animation{
+    position:relative; /*placeholder*/
+}
+
 .Character_chargeShot{
     width: calc(319px * var(--pixel-size2));
     height: calc(340px * var(--pixel-size2));
     position: relative;
     left: 25px;
+    top:0px;
     margin: 0 auto;
     z-index: 2;
     float:left;
@@ -130,6 +136,7 @@ body
     overflow: hidden;
     position: relative;
     left: 25px;
+    top: -40px;
     margin: 0 auto;
     z-index: 2;
     float: right;

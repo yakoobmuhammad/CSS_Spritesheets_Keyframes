@@ -10,12 +10,65 @@ body
     background: white;
 }
 
+/*Non Interactive windows*/
+.window1{
+    float:left;
+}
+/*key pressed animations*/
+.border1{
+    background-color:black;
+    max-width:500px;
+    height:250;
+    margin:5px;
+}
+
+.canvas1{
+    background-color:white;
+    max-width:475px;
+    height:225px;
+    margin:25px
+}
+/*Animated text window*/
+.border2{
+    background-color:black;
+    max-width:500px;
+    height:280px;
+    margin:5px;
+}
+
+.canvas2{
+    background-color: white;
+    max-width:475px;
+    height:225px;
+    margin:25px;   
+}
+/*Game window*/
+.window2{
+    float:right;
+    width:925px;
+    height:600px;
+}
+
+.border3{
+    background-color:black;
+    width:900px;
+    height:600px;
+    margin:25px;
+}
+
+.keyframeSprites{
+    position:absolute;
+}
+
+/*Spritesheets*/
 .Character_jumping{
     width: calc( 573px / 7 * var(--jump-pixel-size));
     height: 162px ;
     overflow: hidden;
     position: relative;
     margin: 0 auto;
+    z-index: 2;
+    display:none;
     /* background: red; */
 }
 
@@ -30,10 +83,11 @@ body
     /* select on frame on sprite sheet (coordinates start from top left to bottom right) */
     width: calc(860px / 5 * var(--pixel-size)) ; /* to make each sprite the same size i have to measure and move each sprite into blocks whose size is the same as 
     the biggest sprite on the sheet */
-    height: calc(264px / 2 * var(--pixel-size));
+    height: calc(256px / 2 * var(--pixel-size));
     /* removes rest of spritesheet to show one image at a time */
-    /*overflow: hidden;*/
+    overflow: hidden;
     position: relative;
+    z-index: 2;
     /* highlights first sprite (remove the whitespace from the png image using software or hide image source to see shape of first sprite) */ 
     /* background: red;*/
     margin: 0 auto;
@@ -51,13 +105,18 @@ body
 
 .Character_spritesheet_row_two{
     top: calc(-132px * var(--pixel-size));
+    display:none;
 }
 
 .Character_chargeShot{
     width: calc(319px * var(--pixel-size2));
     height: calc(340px * var(--pixel-size2));
     position: relative;
+    left: 25px;
     margin: 0 auto;
+    z-index: 2;
+    float:left;
+    /*display:none;*/
 }
 
 .Character_chargeShot_spritesheet{
@@ -70,13 +129,26 @@ body
     height: 157px;
     overflow: hidden;
     position: relative;
+    left: 25px;
     margin: 0 auto;
+    z-index: 2;
+    float: right;
+    /*display:none;*/
 }
 
 .Character_chargeBeam_spritesheet{
     animation: moveSpritesheet3 0.5s steps(4) infinite;
     width: calc(1776px * var(--pixel-size3)) ;
     position: absolute;
+}
+
+.canvas3{
+    z-index:1;
+    position:absolute;
+    background-color:white;
+    width:850px;
+    height:550px;
+    margin:25px;
 }
 
 @keyframes moveSpritesheet1 {

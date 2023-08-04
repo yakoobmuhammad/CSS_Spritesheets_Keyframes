@@ -5,41 +5,52 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="stylesheet_tla2.css">
+    <link rel="stylesheet" href="stylesheet_two_layer_aanimation.css">
     <title>Keylogger script</title>
     <style>
     </style>
 </head>
 
 <!-- 
-    - find how to move exact position of keyframes animation across screen with js
-    - combine running animation into one animation using two keyframes
-    - collision control
+    - find how to move exact position of keyframes animation across screen with js - working on it first
+    - combine running animation into one animation using two keyframes - tbd
+    - collision control -tbd
         - borders
         - with other objects
             - power up
             - enemy (bot)
-    - add space bar to pressed keys
-    - animating text
-        - save phrase as a var in js
-        - run through each char in a loop (for)
-    - start menu
-        - blur
-        - start button
     - background drawn on canvas
+        - find a good background spritesheet that is wider than 925px (at least 1800px for parallax scroll)
     - write a function that changes the z-index of all the spritesheets - done
     
     - cannot move keyframes with position or any matter -immediate problem
         - have removed overflow hidden property from the css file for the character class to highlight the current issue
         - need to either create a function for the movement of the image based on which frame the image is on
         - or just move straight to js animations
+
+        - solution (3)
+            - introduce spacebar key for jumping.
+            - when moving up and down display = block for one key press. for a max height (based on blocks available)
+                - eg only able to move a total of five blocks from bottom of screen to top
+                - based on the height of the spritesheet and how much it was scaled
+    
+    - immediate
+        - move all current inline css to a seperate css file (1)
+        - add space bar to pressed keys (2)
+        - animating text (4)
+            - save phrase as a var in js
+            - run through each char in a loop (for)
+            - intro text
+            - pause menu text
+            - start menu
+                - blur
+                - start button
 -->
 
 <body>
-    <div style="float:left">
-        <div class="border1" id="border1" style="background-color:black;max-width:500px;height:250;margin:5px">
-            <canvas class="canvas1" id="canvas1"
-                style="background-color: white;max-width:475px;height:225px;margin:25px">
+    <div class="window1">
+        <div class="border1" id="border1">
+            <canvas class="canvas1" id="canvas1">
                 <img class="Q_key" id="Q_key" src="keypad_Q.png" alt="Q key pressed">
                 <img class="W_key" id="W_key" src="keypad_W.png" alt="W key pressed">
                 <img class="E_key" id="E_key" src="keypad_E.png" alt="E key pressed">
@@ -50,40 +61,42 @@
             </canvas>
         </div>
 
-        <div class="border2" id="border2" style="background-color:black;max-width:500px;height:250;margin:5px">
-            <canvas class="canvas2" id="canvas2"
-                style="background-color: white;max-width:475px;height:225px;margin:25px">
+        <div class="border2" id="border2">
+            <canvas class="canvas2" id="canvas2">
+                <!--insert text to animate here, leave display as none and change as needed-->
             </canvas>
         </div>
     </div>
 
-    <div style="float:right;width:925px;height:600px;">
-        <div class="border3" id="border3" style="background-color:black;width:900px;height:600px;margin:25px;">
-            <div style="position:absolute;">
+    <div class="window2">
+        <div class="border3" id="border3">
+            <div class="keyframeSprites">
                 <div class="Character">
                     <img id="Character_megaman_main_1" class="Character_spritesheet pixelart"
-                        src="ss_megaman_twolayer.png" alt="Character_Stationary_layer1" style="z-index:2;position:absolute;"/>
-                    <!-- test two layer spritesheet-->
+                        src="ss_megaman_twolayer.png" alt="Character_Stationary_layer1" />
                 </div>
                 <div class="Character">
-                    <img id="Character_megaman_main_2" class="Character_spritesheet pixelart Character_spritesheet_row_two"
-                        src="ss_megaman_twolayer.png" alt="Character_Stationary_layer2"style="z-index:2; display:none;"/>
+                    <img id="Character_megaman_main_2"
+                        class="Character_spritesheet pixelart Character_spritesheet_row_two"
+                        src="ss_megaman_twolayer.png" alt="Character_Stationary_layer2" />
                 </div>
                 <div class="Character_jumping">
-                    <img id="Character_megaman_jumping" class="Character_jumping_spritesheet pixelart" src="ss_megaman_jump.png"
-                        alt="Character Jumping" style="z-index:2; display:none;"/>
+                    <img id="Character_megaman_jumping" class="Character_jumping_spritesheet pixelart"
+                        src="ss_megaman_jump.png" alt="Character Jumping" />
                 </div>
-                <div class="Character_chargeShot">
-                    <img id="Character_megaman_chargeshot" class="Character_chargeShot_spritesheet pixelart" src="ss_megaman_attack.png"
-                        alt="Character Attacking" style="z-index:2; display:none;"/>
-                </div>
-                <div class="Character_chargeBeam">
-                    <img id="Character_megaman_chargeBeam" class="Character_chargeBeam_spritesheet pixelart" src="ss_megaman_blast.png"
-                        alt="Blast Animation" style="z-index:2; display:none;"/>
+                <div class="">
+                    <div class="Character_chargeShot">
+                        <img id="Character_megaman_chargeshot" class="Character_chargeShot_spritesheet pixelart"
+                            src="ss_megaman_attack.png" alt="Character Attacking" />
+                    </div>
+                    <div class="Character_chargeBeam">
+                        <img id="Character_megaman_chargeBeam" class="Character_chargeBeam_spritesheet pixelart"
+                            src="ss_megaman_blast.png" alt="Blast Animation" />
+                    </div>
                 </div>
             </div>
 
-            <canvas class="canvas3" id="canvas3" style="z-index:1;position:absolute;background-color:white;width:850px;height:550px;margin:25px">
+            <canvas class="canvas3" id="canvas3">
             </canvas>
         </div>
     </div>
@@ -93,10 +106,10 @@
         var key;
         var state = "no";
         var img;
-        var canvas1,canvas2,canvas3;
+        var canvas1, canvas2, canvas3;
 
         var x = "10px";
-        var y= "100px";
+        var y = "100px";
 
         var canvas1DOM = document.getElementById("canvas1")
         var canvas2DOM = document.getElementById("canvas2")
@@ -110,29 +123,25 @@
             canvas.drawImage(img, 0, 0);
 
             canvas3 = canvas3DOM.getContext("2d");
-            document.getElementById("Character_megaman_main_1").style.zIndex = "2";
-            //document.getElementById("Character_megaman_main_1").style.top = "10px";
-            //document.getElementById("Character_megaman_main_1").style.padding = "10px";
         }
 
         window.addEventListener('keydown', function (e) { doWhichKey(e); }, false)
         window.addEventListener('keyup', function (e) { doNoKey(e); }, false)
 
-        function movePositionX(){
+        function movePositionX() {
             //
         }
 
-        function movePositionY(){
+        function movePositionY() {
             //
         }
 
-        function clearScreen () {
-            z=1;
-            document.getElementById("Character_megaman_main_1").style.zIndex = z;
-            document.getElementById("Character_megaman_main_2").style.zIndex = z;
-            document.getElementById("Character_megaman_jumping").style.zIndex = z;
-            document.getElementById("Character_megaman_chargeshot").style.zIndex = z;
-            document.getElementById("Character_megaman_chargeBeam").style.zIndex = z;
+        function clearScreen() {
+            document.getElementById("Character_megaman_main_1").style.display = "none";
+            document.getElementById("Character_megaman_main_2").style.display = "none";
+            document.getElementById("Character_megaman_jumping").style.display = "none";
+            document.getElementById("Character_megaman_chargeshot").style.display = "none";
+            document.getElementById("Character_megaman_chargeBeam").style.display = "none";
         }
 
         function doNoKey(e) {

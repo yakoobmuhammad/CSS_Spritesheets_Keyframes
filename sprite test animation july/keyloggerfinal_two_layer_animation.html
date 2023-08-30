@@ -13,28 +13,35 @@
 
 <!-- 
     - find how to move exact position of keyframes animation across screen with js - done
-    - combine running animation into one animation using two keyframes - tbd
-    - collision control -tbd
-        - borders
-        - with other objects
-            - power up
-            - enemy (bot)
-    - background drawn on canvas
-        - find a good background spritesheet that is wider than 925px (at least 1800px for parallax scroll)
     - write a function that changes the z-index of all the spritesheets - done
+    - cannot move keyframes with position or any matter - done
+    - creat parabolic standing jump - done
+    - switch if else to case statement - done
     
-    - cannot move keyframes with position or any matter - solved
-    
+    - combine running animation into one animation using two keyframes - tbd
+    - add in defend animation for e key - tbd
+        - new spritesheet
+        - new keyframe animation
+    - add in duck animation for e key - tbd
+        - new spritesheet
+        - new keyframe animation
+    - background drawn on canvas -tbd
+        - find a good background spritesheet that is wider than 925px (at least 1800px for parallax scroll)
+    - allow for combination of jump and left/right movement - tbd
+        - (true parabolic jump)
+    - clean up code - tbd
+        - group into functions
+        - remove log statements
+        - look for further efficiencies
+
     - immediate
         - rotate through jump, attack and run animation (1)
-            - add in defend` animation for e key
-                - new spritesheet
-                - new code
-            - change up and down position for each animation
-            - switch if else to case statement
-                - preffered over if else 
 
-        - add space bar to pressed keys (2)
+        - collision control -tbd (2)
+            - borders
+            - with other objects
+                - power up
+                - enemy (bot)
 
         - animating text (3)
             - save phrase as a var in js
@@ -79,11 +86,11 @@
                         class="Character_spritesheet pixelart Character_spritesheet_row_two"
                         src="ss_megaman_twolayer.png" alt="Character_Stationary_layer2" />
                 </div>
-                <div class="Character_jumping">
+                <div id="Character_jumping" class="Character_jumping">
                     <img id="Character_megaman_jumping" class="Character_jumping_spritesheet pixelart"
                         src="ss_megaman_jump.png" alt="Character Jumping" />
                 </div>
-                <div id="Attack_animation" class="Attack_animation" >
+                <div id="Attack_animation" class="Attack_animation">
                     <div id="Character_chargeshot" class="Character_chargeShot">
                         <img id="Character_megaman_chargeshot" class="Character_chargeShot_spritesheet pixelart"
                             src="ss_megaman_attack.png" alt="Character Attacking" />
@@ -107,21 +114,26 @@
         var img;
         var canvas1, canvas2, canvas3;
 
+        var secondMotion = false;
+
         var state = "no";
         var current_animation = "Attack_animation";
-        var previous_animation ="";
+        var previous_animation = "";
+        var jumpMode = "";
+
+        var timer = 0;
 
         let xPos = 0;
         let yPos = 0;
 
         var vx = 10;
         var vy = 10;
+        var jumpHeight = 75;
+        var jumpDelay = 5;
 
         var canvas1DOM = document.getElementById("canvas1")
         var canvas2DOM = document.getElementById("canvas2")
         var canvas3DOM = document.getElementById("canvas3")
-        //var main_animate = document.getElementById("Character_megaman_main"); // doesn't easily display keyframe animations
-
 
         window.onload = function () {
             canvas = canvas1DOM.getContext("2d");
@@ -135,11 +147,7 @@
         window.addEventListener('keyup', function (e) { doNoKey(e); }, false)
 
         function movePositionX() {
-            //
-        }
-
-        function movePositionY() {
-            //
+            document.getElementById(current_animation).style.left = xPos + "px";
         }
 
         function clearScreen() {
@@ -162,36 +170,179 @@
             let charCode = e.keyCode || e.which;
             key = String.fromCharCode(charCode);
 
-            if (key == "a" || key == "A") {
-                state = "A";
-
-            } else if (key == "s" || key == "S") {
-                state = "S";
-                xPos += vx;
-            } else if (key == "d" || key == "D") {
-                state = "D";
-            } else if (key == "w" || key == "W") {
-                state = "W";
-                //document.getElementById("Character_chargeBeam").style.top =-x;
-                //this changes the current top position to -10
-                xPos -= vx;
-            } else if (key == "q" || key == "Q") {
-                state = "Q";
-            } else if (key == "e" || key == "E") {
-                state = "E";
-            } else {
-                state = "no";
+            switch (key) {
+                case "a":
+                    previous_animation = current_animation;
+                    state = "A";
+                    current_animation = "Left_animation";
+                    xPos -= vx;
+                    break;
+                case "A":
+                    previous_animation = current_animation;
+                    state = "A";
+                    current_animation = "Left_animation";
+                    xPos -= vx;
+                    break;
+                //case "e":
+                //    state = "E";
+                //    current_animation = "Defend_animation";
+                //    break;
+                //case "E":
+                //    state = "E";
+                //    current_animation = "Defend_animation";
+                //    break;
+                //case "s":
+                //    state = "S";
+                //    current_animation = "Duck_animation";
+                //    break;
+                //case "S":
+                //    state = "S";
+                //    current_animation = "Duck_animation";
+                //    break;
+                case "d":
+                    previous_animation = current_animation;
+                    state = "D";
+                    current_animation = "Right_animation";
+                    xPos += vx;
+                    break;
+                case "D":
+                    previous_animation = current_animation;
+                    state = "D";
+                    current_animation = "Right_animation";
+                    xPos += vx;
+                    break;
+                case "w":
+                    previous_animation = current_animation;
+                    state = "W";
+                    current_animation = "Character_jumping";
+                    console.log(current_animation);
+                    console.log(previous_animation);
+                    console.log(key);
+                    document.getElementById(current_animation).style.display = "block";
+                    if (current_animation != previous_animation) {
+                        document.getElementById(previous_animation).style.display = "none";
+                    }
+                    console.log(jumpHeight);
+                    console.log("up movement");
+                    console.log("motion 2 \n");
+                    const up1 = setInterval(() => {
+                        if (timer == jumpHeight) {
+                            secondMotion = true;
+                        }
+                        console.log(current_animation);
+                        timer++
+                        console.log("current timer : ", timer);
+                        if (secondMotion) {
+                            yPos -= 1;
+                            if (timer == 2 * jumpHeight) {
+                                timer = 0;
+                                clearInterval(up2);
+                            }
+                        } else {
+                            yPos -= 1;
+                        }
+                        console.log("motion : ", yPos);
+                        document.getElementById(current_animation).style.top = yPos + "px";
+                        secondMotion = false;
+                        //console.log("current timer: ", timer, "\n");
+                    }, jumpDelay);
+                    //console.log("down movement");
+                    console.log("\n\n");
+                    seconMotion = false;
+                    //console.log("done movement");
+                    break;
+                case "W":
+                    previous_animation = current_animation;
+                    state = "W";
+                    current_animation = "Character_jumping";
+                    console.log(current_animation);
+                    console.log(previous_animation);
+                    console.log(key);
+                    document.getElementById(current_animation).style.display = "block";
+                    if (current_animation != previous_animation) {
+                        document.getElementById(previous_animation).style.display = "none";
+                    }
+                    console.log(jumpHeight);
+                    console.log("up movement");
+                    console.log("motion 2 \n");
+                    const up2 = setInterval(() => {
+                        if (timer == jumpHeight) {
+                            secondMotion = true;
+                        }
+                        //console.log(current_animation);
+                        timer++
+                        console.log("current timer : ", timer);
+                        if (secondMotion) {
+                            yPos += 1;
+                            if (timer == 2 * jumpHeight) {
+                                timer = 0;
+                                clearInterval(up2);
+                            }
+                        } else {
+                            yPos -= 1;
+                        }
+                        document.getElementById(current_animation).style.top = yPos + "px";
+                        console.log("motion : ", yPos);
+                        //console.log("current timer: ", timer, "\n");
+                    }, jumpDelay);
+                    //console.log("down movement");
+                    console.log("\n\n");
+                    secondMotion = false;
+                    //console.log("done movement");
+                    break;
+                case "q":
+                    previous_animation = current_animation;
+                    state = "Q";
+                    current_animation = "Attack_animation";
+                    break;
+                case "Q":
+                    previous_animation = current_animation;
+                    state = "Q";
+                    current_animation = "Attack_animation";
+                    break;
+                default:
+                    state = "no";
+                    break;
             }
-            document.getElementById(current_animation).style.top = xPos +"px";
+
+            switch (current_animation) {
+                case "Attack_animation":
+                    console.log("attack");
+                    //document.getElementById(current_animation).style.display = "none";
+                    break;
+                //case "Defend_animation":
+                //    console.log("defend");
+                //    document.getElementById(current_animation).style.display = "none";
+                //    break;
+                case "Character_jumping":
+                    console.log("jump");
+                    break;
+                //case "Duck_animation":
+                //    console.log("down");
+                //    break;                    
+                case "Left_animation":
+                    console.log("left");
+                    break;
+                case "Right_animation":
+                    console.log("right");
+                    break;
+            }
+
+            //document.getElementById(previous_animation).style.display = "none";
+            //document.getElementById(current_animation).style.left = xPos +"px";
+
+            // drawing the key pressed animation
             canvas = canvas1DOM.getContext("2d");
             img = document.getElementById(state + "_key");
             canvas.drawImage(img, 0, 0);
 
-            console.log(state);
-            console.log(key);
-            console.log(vx);
-            console.log(vy);
-            console.log(xPos);
+            //console.log(state);
+            //console.log(previous_animation);
+            //console.log(key);
+            //console.log(vx);
+            //console.log(vy);
+            //console.log(xPos);
+
             return String.fromCharCode(charCode);
         }
     </script>

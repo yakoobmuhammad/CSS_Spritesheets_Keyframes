@@ -14,6 +14,7 @@ body
 .window1{
     float:left;
 }
+
 /*key pressed animations*/
 .border1{
     background-color:black;
@@ -47,6 +48,7 @@ body
     float:right;
     width:925px;
     height:600px;
+    z-index: 1;
 }
 
 .border3{
@@ -58,6 +60,12 @@ body
 
 .keyframeSprites{
     position:absolute;
+    left: 600px;
+    top: 100px;
+    z-index: 2;
+}
+
+.Left_animation{
 }
 
 /*Spritesheets*/
@@ -67,7 +75,6 @@ body
     overflow: hidden;
     position: relative;
     margin: 0 auto;
-    z-index: 2;
     display:none;
     /* background: red; */
 }
@@ -87,7 +94,6 @@ body
     /* removes rest of spritesheet to show one image at a time */
     overflow: hidden;
     position: relative;
-    z-index: 2;
     /* highlights first sprite (remove the whitespace from the png image using software or hide image source to see shape of first sprite) */ 
     /* background: red;*/
     margin: 0 auto;
@@ -97,7 +103,6 @@ body
     animation: moveSpritesheet1 1s steps(5) infinite;
     width: calc(860px * var(--pixel-size)) ;
     position: absolute;
-    display:none;
 }
 
 .pixelart{
@@ -111,6 +116,8 @@ body
 
 .Attack_animation{
     position:relative; /*placeholder*/
+    left: 185px;
+    display:none;
 }
 
 .Character_chargeShot{
@@ -122,7 +129,6 @@ body
     margin: 0 auto;
     z-index: 2;
     float:left;
-    /*display:none;*/
 }
 
 .Character_chargeShot_spritesheet{
@@ -140,7 +146,6 @@ body
     margin: 0 auto;
     z-index: 2;
     float: right;
-    /*display:none;*/
 }
 
 .Character_chargeBeam_spritesheet{
